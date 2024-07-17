@@ -40,9 +40,10 @@ public class Metadata {
         createdAt = new Date();
     }
 
-    public Metadata(Order order, String status, String sessionId) {
+    public Metadata(Order order, String status, String sessionId, String username) {
         this.order = order;
         this.status = status;
         this.sessionId = sessionId;
+        this.username = username;
     }
 }

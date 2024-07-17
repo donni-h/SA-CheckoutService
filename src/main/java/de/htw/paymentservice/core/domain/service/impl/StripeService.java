@@ -2,10 +2,8 @@ package de.htw.paymentservice.core.domain.service.impl;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.LineItem;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
-import de.htw.paymentservice.OrderRequest;
 import de.htw.paymentservice.core.domain.service.interfaces.IStripeService;
 import de.htw.paymentservice.port.dto.BasketDTO;
 import de.htw.paymentservice.port.mappers.ItemDTOMapper;
@@ -13,7 +11,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,6 +48,13 @@ public class StripeService implements IStripeService {
         } catch (StripeException e) {
             throw new RuntimeException("Stripe API error: " + e.getMessage(), e);
         }
+
+    }
+
+    @Override
+    public String retrieveCheckoutStatus(String sessionId) throws StripeException {
+        Session session = Session.retrieve(sessionId);
+        return session.getStatus();
 
     }
 }

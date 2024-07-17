@@ -8,7 +8,8 @@ import de.htw.paymentservice.port.dto.ItemDTO;
 import java.util.List;
 
 public interface IOrderService {
-    Order createOrder(Session session, List<ItemDTO> items) throws StripeException;
+    Order createOrder(Session session, List<ItemDTO> items, String username) throws StripeException;
     Order findOrderBySessionId(String sessionId);
-
+    void notifyCheckoutStatus(String sessionId) throws StripeException;
+    void deleteOrder(Order order);
 }
