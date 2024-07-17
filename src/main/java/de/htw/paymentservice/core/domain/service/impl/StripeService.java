@@ -28,29 +28,26 @@ public class StripeService implements IStripeService {
     }
 
     @Override
-    public Session createCheckoutSession(BasketDTO basket) {
-        try {
-            SessionCreateParams params = SessionCreateParams.builder()
-                    .setBillingAddressCollection(SessionCreateParams.BillingAddressCollection.REQUIRED)
-                    .setShippingAddressCollection(
-                            SessionCreateParams.ShippingAddressCollection.builder()
-                                    .addAllowedCountry(SessionCreateParams.ShippingAddressCollection.AllowedCountry.DE)
-                                    .addAllowedCountry(SessionCreateParams.ShippingAddressCollection.AllowedCountry.US)
-                                    .build())
-                    .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                    .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl(String.format("%s/success?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
-                    .setCancelUrl(String.format("%s/cancel?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
-                    .addAllLineItem(basket.getItems().stream()
-                            .map(ItemDTOMapper::mapToLineItem)
-                            .collect(Collectors.toList())
-                    )
-                    .build();
+    public Session createCheckoutSession(BasketDTO basket) throws StripeException{
 
-            return Session.create(params);
-        } catch (StripeException e) {
-            throw new RuntimeException("Stripe API error: " + e.getMessage(), e);
-        }
+        SessionCreateParams params = SessionCreateParams.builder()
+                .setBillingAddressCollection(SessionCreateParams.BillingAddressCollection.REQUIRED)
+                .setShippingAddressCollection(
+                        SessionCreateParams.ShippingAddressCollection.builder()
+                                .addAllowedCountry(SessionCreateParams.ShippingAddressCollection.AllowedCountry.DE)
+                                .addAllowedCountry(SessionCreateParams.ShippingAddressCollection.AllowedCountry.US)
+                                .build())
+                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+                .setMode(SessionCreateParams.Mode.PAYMENT)
+                .setSuccessUrl(String.format("%s/success?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
+                .setCancelUrl(String.format("%s/cancel?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
+                .addAllLineItem(basket.getItems().stream()
+                        .map(ItemDTOMapper::mapToLineItem)
+                        .collect(Collectors.toList())
+                )
+                .build();
+
+        return Session.create(params);
 
     }
 
