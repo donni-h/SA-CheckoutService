@@ -24,7 +24,7 @@ public class ItemDTOMapper {
         OrderItem orderItem = new OrderItem();
         orderItem.setPrice(itemDTO.getItemPrice());
         orderItem.setProductName(itemDTO.getName());
-        orderItem.setItemId(itemDTO.getPlantId());
+        orderItem.setItemId(itemDTO.getProductId());
         return orderItem;
     }
 }

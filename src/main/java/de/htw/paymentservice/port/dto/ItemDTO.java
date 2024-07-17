@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ItemDTO {
     @NotNull
     @JsonProperty("plantId")
-    private UUID plantId;
+    private UUID productId;
     @NotNull
     private String name;
     @NotNull
