@@ -43,7 +43,7 @@ public class PaymentController {
         String username = authentication.getName();
         Session session = stripeService.createCheckoutSession(basketDTO);
         orderService.createOrder(session, basketDTO.getItems(), username);
-        return stripeService.createCheckoutSession(basketDTO).getUrl();
+        return session.getUrl();
     }
 
     @GetMapping("/success")
