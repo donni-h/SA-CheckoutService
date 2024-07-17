@@ -19,6 +19,9 @@ public class StripeService implements IStripeService {
     @Value("${stripe.secretKey}")
     private String stripeSecretKey;
 
+    @Value("${domain}")
+    private String DOMAIN;
+
     @PostConstruct
     public void init() {
         Stripe.apiKey = stripeSecretKey;
@@ -36,8 +39,8 @@ public class StripeService implements IStripeService {
                                     .build())
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl("http://localhost:8080/cancel?session_id={CHECKOUT_SESSION_ID}")
+                    .setSuccessUrl(String.format("%s/success?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
+                    .setCancelUrl(String.format("%s/cancel?session_id=%s", DOMAIN, "{CHECKOUT_SESSION_ID}"))
                     .addAllLineItem(basket.getItems().stream()
                             .map(ItemDTOMapper::mapToLineItem)
                             .collect(Collectors.toList())
