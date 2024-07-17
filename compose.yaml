@@ -6,3 +6,38 @@ services:
       - 'RABBITMQ_DEFAULT_USER=myuser'
     ports:
       - '5672'
+
+  checkoutService:
+    image: checkout_service
+    environment:
+      DB_HOST: checkoutServiceDb
+      DB_PORT: 5432
+      DB_NAME: checkout
+      DB_USER: postgres
+      DB_PASS: password
+    ports:
+       - 8080:8080
+    depends_on:
+      - checkoutServiceDb
+    networks:
+      - checkoutService_net
+
+  checkoutServiceDb:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: checkout
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - '5432:5432'
+    networks:
+      - checkoutService_net
+    volumes:
+      - checkoutService_data:/var/lib/postgresql/data
+
+volumes:
+  checkoutService_data:
+networks:
+  checkoutService_net:
+
+

@@ -1,12 +1,19 @@
-package de.htw.paymentservice;
+package de.htw.paymentservice.core.domain.service.impl;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.LineItem;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import de.htw.paymentservice.OrderRequest;
+import de.htw.paymentservice.port.dto.BasketDTO;
+import de.htw.paymentservice.port.mappers.ItemDTOMapper;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class StripeService {
@@ -19,7 +26,7 @@ public class StripeService {
         Stripe.apiKey = stripeSecretKey;
     }
 
-    public String createCheckoutSession(OrderRequest orderRequest) {
+    public Session createCheckoutSession(BasketDTO basket) {
         try {
             SessionCreateParams params = SessionCreateParams.builder()
                     .setBillingAddressCollection(SessionCreateParams.BillingAddressCollection.REQUIRED)
@@ -30,22 +37,15 @@ public class StripeService {
                                     .build())
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
-                    .setSuccessUrl("https://your-frontend/success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl("https://your-frontend/cancel")
-                    .addLineItem(SessionCreateParams.LineItem.builder()
-                            .setQuantity(orderRequest.getQuantity())
-                            .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                                    .setCurrency("usd")
-                                    .setUnitAmount(orderRequest.getAmount())
-                                    .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                            .setName("Product Name")
-                                            .build())
-                                    .build())
-                            .build())
+                    .setSuccessUrl("http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}")
+                    .setCancelUrl("http://localhost:8080/cancel")
+                    .addAllLineItem(basket.getItems().stream()
+                            .map(ItemDTOMapper::mapToLineItem)
+                            .collect(Collectors.toList())
+                    )
                     .build();
 
-            Session session = Session.create(params);
-            return session.getUrl();
+            return Session.create(params);
         } catch (StripeException e) {
             throw new RuntimeException("Stripe API error: " + e.getMessage(), e);
         }
