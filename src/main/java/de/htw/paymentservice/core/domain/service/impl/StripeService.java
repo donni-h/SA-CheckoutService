@@ -6,6 +6,7 @@ import com.stripe.model.LineItem;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.htw.paymentservice.OrderRequest;
+import de.htw.paymentservice.core.domain.service.interfaces.IStripeService;
 import de.htw.paymentservice.port.dto.BasketDTO;
 import de.htw.paymentservice.port.mappers.ItemDTOMapper;
 import jakarta.annotation.PostConstruct;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class StripeService {
+public class StripeService implements IStripeService {
 
     @Value("${stripe.secretKey}")
     private String stripeSecretKey;
@@ -26,6 +27,7 @@ public class StripeService {
         Stripe.apiKey = stripeSecretKey;
     }
 
+    @Override
     public Session createCheckoutSession(BasketDTO basket) {
         try {
             SessionCreateParams params = SessionCreateParams.builder()

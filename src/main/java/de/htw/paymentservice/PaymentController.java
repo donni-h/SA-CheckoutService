@@ -8,6 +8,8 @@ import com.stripe.model.checkout.Session;
 import de.htw.paymentservice.core.domain.model.Order;
 import de.htw.paymentservice.core.domain.service.impl.OrderService;
 import de.htw.paymentservice.core.domain.service.impl.StripeService;
+import de.htw.paymentservice.core.domain.service.interfaces.IOrderService;
+import de.htw.paymentservice.core.domain.service.interfaces.IStripeService;
 import de.htw.paymentservice.port.dto.BasketDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +23,16 @@ import java.util.List;
 @RequestMapping("/api/payment")
 public class PaymentController {
 
+
+    private IStripeService stripeService;
+
+    private IOrderService orderService;
+
     @Autowired
-    private StripeService stripeService;
-    @Autowired
-    private OrderService orderService;
+    public PaymentController(IStripeService stripeService, IOrderService orderService) {
+        this.stripeService = stripeService;
+        this.orderService = orderService;
+    }
 
     @PostMapping("/create-checkout-session")
     public @ResponseBody String createCheckoutSession(@RequestBody @Valid BasketDTO basketDTO) throws StripeException {

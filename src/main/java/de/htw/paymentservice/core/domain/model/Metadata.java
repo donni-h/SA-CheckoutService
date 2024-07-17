@@ -25,6 +25,8 @@ public class Metadata {
     @JsonBackReference
     private Order order;
 
+    private String username;
+
     private String status;
 
     private String sessionId;

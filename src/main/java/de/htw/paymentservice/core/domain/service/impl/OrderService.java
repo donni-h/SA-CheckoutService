@@ -8,6 +8,7 @@ import de.htw.paymentservice.core.domain.model.Metadata;
 import de.htw.paymentservice.core.domain.model.Order;
 import de.htw.paymentservice.core.domain.model.OrderItem;
 import de.htw.paymentservice.core.domain.service.interfaces.IOrderRepository;
+import de.htw.paymentservice.core.domain.service.interfaces.IOrderService;
 import de.htw.paymentservice.port.dto.BasketDTO;
 import de.htw.paymentservice.port.dto.ItemDTO;
 import de.htw.paymentservice.port.mappers.ItemDTOMapper;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderService {
+public class OrderService implements IOrderService {
 
     private final IOrderRepository orderRepository;
 
@@ -35,11 +36,10 @@ public class OrderService {
         this.orderRepository = repository;
     }
 
+    @Override
     public Order createOrder(Session session, List<ItemDTO> items) throws StripeException {
 
         Order order = new Order();
-        System.out.println(session.getId());
-        System.out.println(session.getUrl());
         Metadata metadata = new Metadata(order, session.getStatus(), session.getId());
         order.setMetadata(metadata);
 
@@ -53,9 +53,9 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    @Override
     public Order findOrderBySessionId(String sessionId) {
         Order order = orderRepository.findOrderBySessionId(sessionId).orElseThrow(() -> new RuntimeException("Order not found"));
-        System.out.println(order.toString());
         return order;
     }
 }
