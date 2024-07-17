@@ -50,15 +50,15 @@ public class PaymentController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody Order success(@RequestParam(name = "session_id", required = true) String sessionId) throws StripeException, OrderSessionIdNotFoundException{
         Order order = orderService.findOrderBySessionId(sessionId);
-        stripeService.expireSession(sessionId);
         orderService.notifyCheckoutStatus(sessionId);
         return order;
     }
 
     @GetMapping("/cancel")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody void cancel(@RequestParam(name = "session_id", required = true) String sessionId) throws OrderSessionIdNotFoundException, OrderIdNotFoundException {
+    public @ResponseBody void cancel(@RequestParam(name = "session_id", required = true) String sessionId) throws OrderSessionIdNotFoundException, OrderIdNotFoundException, StripeException {
         Order order = orderService.findOrderBySessionId(sessionId);
+        stripeService.expireSession(sessionId);
         orderService.deleteOrder(order.getId());
     }
 
