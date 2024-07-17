@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import de.htw.paymentservice.core.domain.model.Order;
+import de.htw.paymentservice.core.domain.service.impl.StripeService;
 import de.htw.paymentservice.core.domain.service.interfaces.IOrderService;
 import de.htw.paymentservice.core.domain.service.interfaces.IStripeService;
 import de.htw.paymentservice.port.dto.BasketDTO;
@@ -41,6 +42,7 @@ public class PaymentController {
     @GetMapping("/success")
     public @ResponseBody Order success(@RequestParam(name = "session_id") String sessionId) throws StripeException, JsonProcessingException {
         Order order = orderService.findOrderBySessionId(sessionId);
+        stripeService.expireSession(sessionId);
         orderService.notifyCheckoutStatus(sessionId);
         return order;
     }

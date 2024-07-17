@@ -7,4 +7,6 @@ import de.htw.paymentservice.port.dto.BasketDTO;
 public interface IStripeService {
     Session createCheckoutSession(BasketDTO basket);
     String retrieveCheckoutStatus(String sessionId) throws StripeException;
+
+    void expireSession(String sessionId) throws StripeException;
 }

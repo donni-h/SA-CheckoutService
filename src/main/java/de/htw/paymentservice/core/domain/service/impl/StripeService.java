@@ -37,7 +37,7 @@ public class StripeService implements IStripeService {
                     .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                     .setMode(SessionCreateParams.Mode.PAYMENT)
                     .setSuccessUrl("http://localhost:8080/success?session_id={CHECKOUT_SESSION_ID}")
-                    .setCancelUrl("http://localhost:8080/cancel")
+                    .setCancelUrl("http://localhost:8080/cancel?session_id={CHECKOUT_SESSION_ID}")
                     .addAllLineItem(basket.getItems().stream()
                             .map(ItemDTOMapper::mapToLineItem)
                             .collect(Collectors.toList())
@@ -56,5 +56,11 @@ public class StripeService implements IStripeService {
         Session session = Session.retrieve(sessionId);
         return session.getStatus();
 
+    }
+
+    @Override
+    public void expireSession(String sessionId) throws StripeException {
+       Session session = Session.retrieve(sessionId);
+       session.expire();
     }
 }
