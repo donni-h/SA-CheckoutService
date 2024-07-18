@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface IOrderService {
+
     Order createOrder(Session session, List<ItemDTO> items, String username);
     Order findOrderBySessionId(String sessionId) throws OrderSessionIdNotFoundException;
     void notifyCheckoutStatus(String sessionId) throws StripeException, OrderSessionIdNotFoundException;
@@ -18,4 +19,5 @@ public interface IOrderService {
     Order getOrderById(UUID orderId) throws OrderIdNotFoundException;
     List<Order> getAllOrdersForUser(String username);
     void deleteAllOrders();
+    Order updateOrderStatus(Order order) throws StripeException;
 }

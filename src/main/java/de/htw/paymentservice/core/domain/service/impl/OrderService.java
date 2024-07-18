@@ -89,4 +89,11 @@ public class OrderService implements IOrderService {
     public void deleteAllOrders(){
         orderRepository.deleteAll();
     }
+
+    public Order updateOrderStatus(Order order) throws StripeException {
+        String session = order.getMetadata().getSessionId();
+        String status = stripeService.retrieveCheckoutStatus(session);
+        order.getMetadata().setStatus(status);
+        return orderRepository.save(order);
+    }
 }

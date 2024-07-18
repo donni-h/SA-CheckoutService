@@ -50,6 +50,7 @@ public class PaymentController {
     @ResponseStatus(HttpStatus.OK)
     public @ResponseBody Order success(@RequestParam(name = "session_id", required = true) String sessionId) throws StripeException, OrderSessionIdNotFoundException{
         Order order = orderService.findOrderBySessionId(sessionId);
+        order = orderService.updateOrderStatus(order);
         orderService.notifyCheckoutStatus(sessionId);
         return order;
     }
