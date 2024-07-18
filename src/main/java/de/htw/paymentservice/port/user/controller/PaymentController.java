@@ -86,7 +86,7 @@ public class PaymentController {
 
     @DeleteMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteOrderById(){
+    public void deleteAllOrders(){
         orderService.deleteAllOrders();
     }
 }
