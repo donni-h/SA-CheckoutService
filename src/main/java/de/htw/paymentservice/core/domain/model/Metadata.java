@@ -46,4 +46,22 @@ public class Metadata {
         this.sessionId = sessionId;
         this.username = username;
     }
+
+    public Metadata(String username, String status, String sessionId, Date createdAt) {
+        this.username = username;
+        this.status = status;
+        this.sessionId = sessionId;
+        this.createdAt = createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Metadata metadata = (Metadata) o;
+        return this.getUsername().equals(metadata.getUsername())
+                && this.getStatus().equals(metadata.getStatus())
+                && this.getSessionId().equals(metadata.getSessionId())
+                && this.getCreatedAt().equals(metadata.getCreatedAt());
+    }
 }

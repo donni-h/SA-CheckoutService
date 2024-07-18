@@ -31,5 +31,30 @@ public class Order {
     @JsonManagedReference
     private Metadata metadata;
 
+    public Order(UUID id, List<OrderItem> items, Metadata metadata) {
+        this.id = id;
+        this.items = items;
+        this.metadata = metadata;
+    }
 
+    public Order(List<OrderItem> items, Metadata metadata) {
+        this.items = items;
+        this.metadata = metadata;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        List<OrderItem> compareOrderItems = order.getItems();
+        Boolean itemsEqual = true;
+        for (OrderItem item: this.getItems()){
+            if (!compareOrderItems.contains(item)){
+                itemsEqual = false;
+                break;
+            }
+        }
+        return itemsEqual && this.getMetadata().equals(order.getMetadata());
+    }
 }

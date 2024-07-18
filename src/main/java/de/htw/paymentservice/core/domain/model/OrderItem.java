@@ -38,4 +38,29 @@ public class OrderItem {
     @JsonBackReference
     private Order order;
 
+    public OrderItem(UUID id, String productName, UUID itemId, BigDecimal price, Order order) {
+        this.id = id;
+        this.productName = productName;
+        this.itemId = itemId;
+        this.price = price;
+        this.order = order;
+    }
+
+    public OrderItem(String productName, UUID itemId, BigDecimal price, Order order) {
+        this.productName = productName;
+        this.itemId = itemId;
+        this.price = price;
+        this.order = order;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        OrderItem item = (OrderItem) o;
+        return this.getProductName().equals(item.getProductName())
+                && this.getItemId().equals(item.getItemId())
+                && this.getPrice().equals(item.getPrice());
+    }
+
 }
